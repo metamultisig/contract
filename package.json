@@ -1,0 +1,35 @@
+{
+  "requires": true,
+  "license": "BSD-2-Clause",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metamultisig/contract.git"
+  },
+  "lockfileVersion": 1,
+  "devDependencies": {
+    "truffle": "^5.0.13",
+    "truffle-contract": "^1.1.11",
+    "truffle-default-builder": "^2.0.0"
+  },
+  "scripts": {
+    "pretest": "truffle compile",
+    "test": "truffle test",
+    "watch": "npm-watch",
+    "build": "webpack",
+    "dev": "webpack-dev-server",
+    "lint": "solium --dir ./contracts"
+  },
+  "watch": {
+    "test": {
+      "patterns": [
+        "contracts",
+        "migrations",
+        "test"
+      ],
+      "extensions": "js,json,sol"
+    }
+  },
+  "dependencies": {
+    "openzeppelin-solidity": "2.1.1"
+  }
+}
