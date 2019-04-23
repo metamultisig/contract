@@ -75,13 +75,22 @@ contract MetaMultisig {
         require(nonce == nextNonce, "Nonces must be sequential.");
         nextNonce++;
 
-        address[] memory signatories = new address[](sigs.length);
         bytes32 txhash = getTransactionHash(destination, value, data, nonce).toEthSignedMessageHash();
-        uint weight = 0;
+
+        address[] memory signatories;
+        uint weight = keyholders[msg.sender];
+        if(weight > 0) {
+            signatories = new address[](sigs.length + 1);
+            signatories[signatories.length - 1] = msg.sender;
+        } else {
+            signatories = new address[](sigs.length);
+        }
+
         for(uint i = 0; i < sigs.length; i++) {
             address signer = txhash.recover(sigs[i]);
-            signatories[i] = signer;
             require(i == 0 || signer > signatories[i - 1], "Signatures must be in address order.");
+            require(signer != msg.sender, "Sender cannot also be a signer.");
+            signatories[i] = signer;
             weight += keyholders[signer];
         }
         require(weight >= threshold);

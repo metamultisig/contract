@@ -33,7 +33,7 @@ contract('MetaMultisig', function(accounts) {
     const nonce = await multisig.nextNonce();
     const sighash = await multisig.getTransactionHash(accounts[0], web3.utils.toWei('0.1', 'ether'), '0x', nonce);
     const sigs = [await sign(sighash, accounts[0]), await sign(sighash, accounts[1])];
-    const tx = await multisig.submit(accounts[0], web3.utils.toWei('0.1', 'ether'), '0x', nonce, sigs);
+    const tx = await multisig.submit(accounts[0], web3.utils.toWei('0.1', 'ether'), '0x', nonce, sigs, {from: accounts[3]});
     console.log(tx.hash);
     assert.equal(await web3.eth.getBalance(multisig.address), web3.utils.toWei('0.9', 'ether'));
   });
@@ -44,7 +44,7 @@ contract('MetaMultisig', function(accounts) {
     const sigs = [await sign(sighash, accounts[0]), await sign(sighash, accounts[1])];
     // Try and send to a different account than the one the signature is for.
     try {
-      await multisig.submit(accounts[1], web3.utils.toWei('0.1', 'ether'), '0x', nonce, sigs);
+      await multisig.submit(accounts[1], web3.utils.toWei('0.1', 'ether'), '0x', nonce, sigs, {from: accounts[3]});
       assert.fail("Expected exception");
     } catch(e) {
       assert.ok(e.message.includes('revert'));

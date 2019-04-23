@@ -12,7 +12,6 @@
     "truffle-default-builder": "^2.0.0"
   },
   "scripts": {
-    "pretest": "truffle compile",
     "test": "truffle test",
     "watch": "npm-watch",
     "build": "webpack",
