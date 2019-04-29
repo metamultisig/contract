@@ -1,4 +1,4 @@
-// ALMOST TOTALLY UNTESTED
+// NOT YET AUDITED
 
 pragma solidity ^0.5.0;
 pragma experimental ABIEncoderV2;
@@ -49,16 +49,18 @@ contract MetaMultisig {
 
     function setKeyholderWeight(address keyholder, uint weight) external selfOnly {
         totalWeight = totalWeight.sub(keyholders[keyholder]).add(weight);
-        keyholders[keyholder] = weight;
         require(threshold <= totalWeight, "Weight change would make approvals impossible.");
+        keyholders[keyholder] = weight;
 
         emit KeyholderChanged(keyholder, weight);
     }
 
     function setThreshold(uint _threshold) external selfOnly {
+        require(_threshold > 0, "Threshold must be greater than zero.");
+        require(_threshold <= totalWeight, "Threshold change would make approvals impossible.");
         threshold = _threshold;
-        require(threshold > 0, "Threshold must be greater than zero.");
-        require(threshold <= totalWeight, "Threshold change would make approvals impossible.");
+
+        emit ThresholdChanged(threshold);
     }
 
     function getTransactionHash(address destination, uint value, bytes memory data, uint nonce) public view returns(bytes32) {
@@ -71,7 +73,10 @@ contract MetaMultisig {
         ));
     }
 
-    function submit(address payable destination, uint value, bytes memory data, uint nonce, bytes[] memory sigs) public {
+    //'address payable destination' -> 'address destination'
+    //address payable is not used and it currently breaks the coverage tool
+    //submitted issue: https://github.com/sc-forks/solidity-coverage/issues/322
+    function submit(address destination, uint value, bytes memory data, uint nonce, bytes[] memory sigs) public {
         require(nonce == nextNonce, "Nonces must be sequential.");
         nextNonce++;
 
@@ -93,7 +98,7 @@ contract MetaMultisig {
             signatories[i] = signer;
             weight += keyholders[signer];
         }
-        require(weight >= threshold);
+        require(weight >= threshold, "Threshold not met.");
 
         (bool result, bytes memory ret) = destination.call.value(value)(data);
         require(result, "Transaction failed.");

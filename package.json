@@ -7,12 +7,14 @@
   },
   "lockfileVersion": 1,
   "devDependencies": {
+    "solidity-coverage": "^0.5.11",
     "truffle": "^5.0.13",
     "truffle-contract": "^1.1.11",
     "truffle-default-builder": "^2.0.0"
   },
   "scripts": {
     "test": "truffle test",
+    "coverage": "./node_modules/.bin/solidity-coverage",
     "watch": "npm-watch",
     "build": "webpack",
     "dev": "webpack-dev-server",
