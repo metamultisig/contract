@@ -316,6 +316,16 @@ contract('MetaMultisig', function (accounts) {
         assert.equal(await multisig.threshold(), threshold);
     });
 
+    it('fails to update the weights if called directly', async function () {
+        try {
+            await multisig.setKeyholderWeight(keyHolder3, 10, {from: keyHolder3});
+            assert.fail("Expected exception");
+        } catch (e) {
+            assert.ok(e.message.includes('revert'));
+        }
+        assert.equal(await multisig.keyholders(keyHolder3), 2);
+    });
+
     it('correctly updates the weights', async function () {
         let nonce = await multisig.nextNonce();
 

@@ -75,7 +75,8 @@ contract MetaMultisig {
 
     //'address payable destination' -> 'address destination'
     //address payable is not used and it currently breaks the coverage tool
-    function submit(address destination, uint value, bytes memory data, uint nonce, bytes[] memory sigs) public {
+    //submitted issue: https://github.com/sc-forks/solidity-coverage/issues/322
+    function submit(address payable destination, uint value, bytes memory data, uint nonce, bytes[] memory sigs) public {
         require(nonce == nextNonce, "Nonces must be sequential.");
         nextNonce++;
 
