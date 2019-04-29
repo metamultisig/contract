@@ -5,10 +5,7 @@
 
 To run unit tests with Truffle:
 
-```
-truffle develop
-truffle(develop)> test
-```
+```truffle test``` or ```npm test```
 
 should end up with something like the below:
 
@@ -21,6 +18,7 @@ should end up with something like the below:
     ✓ sends simple eth transaction signed by one address with enough threshold (95ms)
     ✓ fails to send eth transaction when not enough eth balance (105ms)
     ✓ rejects already executed transaction, invalid nonce (139ms)
+    ✓ rejects transaction with future nonce (94ms)
     ✓ rejects transactions with invalid signatures (112ms)
     ✓ rejects transactions when threshold not met (97ms)
     ✓ sends tokens from multisig (130ms)
@@ -34,14 +32,12 @@ should end up with something like the below:
     ✓ submitting transaction directly by a keyholder counts as signing it (114ms)
     ✓ fails when both signed and submitted by the same keyholder (112ms)
 
-  19 passing (6s)
+  20 passing (7s)
 ```
 
 To generate coverage report with [solidity-coverage](https://github.com/sc-forks/solidity-coverage): 
 
-```
-./node_modules/.bin/solidity-coverage
-```
+```npm run coverage```
 
 what should end up with something like this:
 
@@ -50,4 +46,3 @@ what should end up with something like this:
 | contracts/          |       100  |       100  |       100  |       100  |                  |
 |  MetaMultisig.sol   |       100  |       100  |       100  |       100  |                  |
 | All files           |       100  |       100  |       100  |       100  |                  |
-

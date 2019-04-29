@@ -14,6 +14,7 @@
   },
   "scripts": {
     "test": "truffle test",
+    "coverage": "./node_modules/.bin/solidity-coverage",
     "watch": "npm-watch",
     "build": "webpack",
     "dev": "webpack-dev-server",

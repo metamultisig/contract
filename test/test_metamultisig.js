@@ -159,6 +159,18 @@ contract('MetaMultisig', function (accounts) {
         }
     });
 
+    it('rejects transaction with future nonce', async function () {
+        const nonce = (await multisig.nextNonce())+1;
+        const sighash = await multisig.getTransactionHash(keyHolder3, web3.utils.toWei('0.1', 'ether'), '0x', nonce);
+        const sigs = [await sign(sighash, keyHolder3)];
+        try {
+            await multisig.submit(keyHolder3, web3.utils.toWei('0.1', 'ether'), '0x', nonce, sigs, {from: nonKeyHolder});
+            assert.fail("Expected exception");
+        } catch (e) {
+            assert.ok(e.message.includes('revert'));
+        }
+    });
+
     it('rejects transactions with invalid signatures', async function () {
         const nonce = await multisig.nextNonce();
         const sighash = await multisig.getTransactionHash(keyHolder1, web3.utils.toWei('0.1', 'ether'), '0x', nonce);
